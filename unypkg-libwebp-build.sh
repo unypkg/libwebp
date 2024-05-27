@@ -11,7 +11,7 @@ set -vx
 wget -qO- uny.nu/pkg | bash -s buildsys
 
 ### Installing build dependencies
-#unyp install python
+unyp install libpng libjpeg-turbo libtiff
 
 ### Getting Variables from files
 UNY_AUTO_PAT="$(cat UNY_AUTO_PAT)"
@@ -47,12 +47,9 @@ echo "newer" >release-"$pkgname"
 
 git_clone_source_repo
 
-cd "$pkgname" || exit
-gzip -cd ../libpng-"$latest_ver"-apng.patch.gz | patch -p1
+#cd "$pkgname" || exit
+#cd /uny/sources || exit
 
-cd /uny/sources || exit
-
-version_details
 archiving_source
 
 ######################################################################################################################
@@ -63,6 +60,7 @@ archiving_source
 unyc <<"UNYEOF"
 set -vx
 source /uny/git/unypkg/fn
+
 pkgname="libwebp"
 
 version_verbose_log_clean_unpack_cd
@@ -74,7 +72,13 @@ get_include_paths
 
 unset LD_RUN_PATH
 
-./configure --prefix=/uny/pkg/"$pkgname"/"$pkgver" --disable-static
+./configure --prefix=/uny/pkg/"$pkgname"/"$pkgver" \
+    --enable-libwebpmux \
+    --enable-libwebpdemux \
+    --enable-libwebpdecoder \
+    --enable-libwebpextras \
+    --enable-swap-16bit-csp \
+    --disable-static
 
 make -j"$(nproc)"
 make -j"$(nproc)" install
