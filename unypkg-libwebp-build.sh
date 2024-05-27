@@ -72,6 +72,8 @@ get_include_paths
 
 unset LD_RUN_PATH
 
+./autogen.sh
+
 ./configure --prefix=/uny/pkg/"$pkgname"/"$pkgver" \
     --enable-libwebpmux \
     --enable-libwebpdemux \
